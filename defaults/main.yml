@@ -69,6 +69,14 @@ grafana_provisioning_dashboard_providers:
     options:
       path: /etc/grafana/dashboards
 
+# A list of template files on the Ansible controller server to install into the dashboards directory.
+#
+# Example:
+# grafana_provisioning_dashboard_template_files:
+#   - name: /path/to/my-dashboard.json
+#     name: my-dashboard.json
+grafana_provisioning_dashboard_template_files: []
+
 # A list of provisioning datasources.
 # See `../templates/provisioning/datasources.yaml.j2`
 grafana_provisioning_datasources: []
