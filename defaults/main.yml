@@ -150,11 +150,11 @@ grafana_systemd_wanted_services_list: []
 
 # Specifies the value of the `Permission-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permission-Policy
-grafana_http_header_content_permission_policy: "{{ 'interest-cohort=() always' if grafana_floc_optout_enabled else '' }}"
+grafana_http_header_content_permission_policy: "{{ 'interest-cohort=()' if grafana_floc_optout_enabled else '' }}"
 
 # Specifies the value of the `Strict-Transport-Security` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-grafana_http_header_strict_transport_security: "{{ '\"max-age=31536000; includeSubDomains; preload\" always' if grafana_hsts_preload_enabled else '\"max-age=31536000; includeSubDomains\" always' }}"
+grafana_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if grafana_hsts_preload_enabled else '' }}"
 
 # Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
 #
