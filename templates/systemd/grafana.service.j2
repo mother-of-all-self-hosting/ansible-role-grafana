@@ -27,6 +27,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
 			{% if grafana_container_http_host_bind_port %}
 			-p {{ grafana_container_http_host_bind_port }}:3000 \
 			{% endif %}
+			--env-file={{ grafana_base_path }}/env \
 			--label-file={{ grafana_base_path }}/labels \
 			--mount type=bind,src={{ grafana_config_path }},dst=/etc/grafana \
 			--mount type=bind,src={{ grafana_data_path }},dst=/var/lib/grafana \

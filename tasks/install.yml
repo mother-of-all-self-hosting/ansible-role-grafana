@@ -32,6 +32,8 @@
       dst: "{{ grafana_config_path }}/provisioning/dashboards/default.yaml"
     - src: labels.j2
       dst: "{{ grafana_base_path }}/labels"
+    - src: env.j2
+      dst: "{{ grafana_base_path }}/env"
 
 - name: Ensure dashboard(s) downloaded
   ansible.builtin.get_url:

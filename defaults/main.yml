@@ -142,6 +142,9 @@ grafana_container_labels_additional_labels: ''
 # A list of extra arguments to pass to the container
 grafana_container_extra_arguments: []
 
+# Additional environment variables.
+grafana_environment_variables_additional_variables: ''
+
 # List of systemd services that the Grafana systemd service depends on
 grafana_systemd_required_services_list: ['docker.service']
 
