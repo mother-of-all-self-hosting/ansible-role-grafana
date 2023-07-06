@@ -59,6 +59,11 @@ grafana_content_security_policy_template: "script-src 'self' 'unsafe-eval' 'unsa
 # which is an in-container path for the default dashboard.
 grafana_default_home_dashboard_path: ''
 
+# grafana_feature_toggles_enable controls the enabled feature toggles.
+# To enable experimental features use comma-separation: `grafana_feature_toggles_enable: feature1,feature2`
+# Leave it empty to not enable any experimental features.
+grafana_feature_toggles_enable: ''
+
 # A list of provisioning dashboard providers.
 # See `../templates/provisioning/dashboards.yaml.j2`
 grafana_provisioning_dashboard_providers:

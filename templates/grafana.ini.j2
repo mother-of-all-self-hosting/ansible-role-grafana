@@ -27,3 +27,8 @@ org_name = "{{ grafana_anonymous_access_org_name }}"
 
 [dashboards]
 default_home_dashboard_path = {{ grafana_default_home_dashboard_path }}
+
+{% if grafana_feature_toggles_enable %}
+[feature_toggles]
+enable = {{ grafana_feature_toggles_enable }}
+{% endif %}
