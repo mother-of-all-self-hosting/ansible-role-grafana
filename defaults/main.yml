@@ -68,7 +68,7 @@ grafana_feature_toggles_enable: ''
 # See `../templates/provisioning/dashboards.yaml.j2`
 grafana_provisioning_dashboard_providers:
   - name: Dashboards
-    folder: '' # The folder where to place the dashboards
+    folder: ''  # The folder where to place the dashboards
     type: file
     allowUiUpdates: true
     options:
@@ -186,4 +186,3 @@ grafana_floc_optout_enabled: true
 # - https://hstspreload.org/#opt-in
 # See: `grafana_http_header_strict_transport_security`
 grafana_hsts_preload_enabled: false
-
