@@ -95,8 +95,9 @@ grafana_container_network: "{{ grafana_identifier }}"
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
-# Use this to expose this container to another reverse proxy, which runs in a different container network.
-grafana_container_additional_networks: []
+grafana_container_additional_networks: "{{ grafana_container_additional_networks_auto + grafana_container_additional_networks_custom }}"
+grafana_container_additional_networks_auto: []
+grafana_container_additional_networks_custom: []
 
 # Controls whether the Grafana container exposes its HTTP port (tcp/3000 in the container).
 #
