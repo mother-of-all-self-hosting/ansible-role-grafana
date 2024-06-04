@@ -167,7 +167,7 @@ grafana_container_extra_arguments: []
 grafana_environment_variables_additional_variables: ''
 
 # List of systemd services that the Grafana systemd service depends on
-grafana_systemd_required_services_list: ['docker.service']
+grafana_systemd_required_services_list: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
 
 # List of systemd services that Grafana systemd service wants
 grafana_systemd_wanted_services_list: []
