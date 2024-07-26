@@ -101,7 +101,7 @@ grafana_provisioning_dashboard_template_files: []
 # See `../templates/provisioning/datasources.yaml.j2`
 grafana_provisioning_datasources: []
 
-grafana_container_image: "{{ grafana_container_image_registry_prefix }}grafana/grafana:{{ grafana_version }}"
+grafana_container_image: "{{ grafana_container_image_registry_prefix }}grafana/grafana-oss:{{ grafana_version }}"
 grafana_container_image_registry_prefix: docker.io/
 grafana_container_image_force_pull: "{{ grafana_container_image.endswith(':latest') }}"
 
