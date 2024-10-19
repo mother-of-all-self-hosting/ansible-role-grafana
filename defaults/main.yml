@@ -68,11 +68,11 @@ grafana_feature_toggles_enable: ''
 # See `../templates/provisioning/dashboards.yaml.j2`
 grafana_provisioning_dashboard_providers:
   - name: Dashboards
-    folder: ''  # The folder where to place the dashboards
+    folder: ''  # Name of the folder with provisoned dashboards in grafana
     type: file
     allowUiUpdates: true
     options:
-      path: /etc/grafana/dashboards
+      path: '/etc/grafana/dashboards' # The folder where to place the dashboards
 
 # Configure smtp settings for sending email notifications
 #
@@ -92,10 +92,10 @@ grafana_smtp_from_address: ""
 # A list of template files on the Ansible controller server to install into the dashboards directory.
 #
 # Example:
-# grafana_provisioning_dashboard_template_files:
+# grafana_dashboard_template_files:
 #   - name: /path/to/my-dashboard.json
 #     name: my-dashboard.json
-grafana_provisioning_dashboard_template_files: []
+grafana_dashboard_template_files: []
 
 # A list of provisioning datasources.
 # See `../templates/provisioning/datasources.yaml.j2`

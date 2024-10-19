@@ -52,11 +52,11 @@
 - name: Ensure dashboard templates installed
   ansible.builtin.template:
     src: "{{ item.path }}"
-    dest: "{{ grafana_config_path }}/provisioning/dashboards/{{ item.name }}"
+    dest: "{{ grafana_config_path }}/dashboards/{{ item.name }}"
     mode: "0440"
     owner: "{{ grafana_uid }}"
     group: "{{ grafana_gid }}"
-  with_items: "{{ grafana_provisioning_dashboard_template_files }}"
+  with_items: "{{ grafana_dashboard_template_files }}"
 
 - name: Ensure Grafana image is pulled
   community.docker.docker_image:
