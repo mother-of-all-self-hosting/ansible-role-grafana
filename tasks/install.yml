@@ -59,8 +59,8 @@
   with_items: "{{ grafana_provisioning_dashboard_template_files }}"
 
 - name: Ensure dashboard files installed
-  ansible.builtin.file:
-    path: "{{ item.path }}"
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
     dest: "{{ grafana_config_path }}/dashboards/{{ item.name }}"
     mode: "0440"
     owner: "{{ grafana_uid }}"
