@@ -179,7 +179,10 @@ grafana_systemd_required_services_list_auto: []
 grafana_systemd_required_services_list_custom: []
 
 # List of systemd services that Grafana systemd service wants
-grafana_systemd_wanted_services_list: []
+grafana_systemd_wanted_services_list: "{{ grafana_systemd_wanted_services_list_default + grafana_systemd_wanted_services_list_auto + grafana_systemd_wanted_services_list_custom }}"
+grafana_systemd_wanted_services_list_default: []
+grafana_systemd_wanted_services_list_auto: []
+grafana_systemd_wanted_services_list_custom: []
 
 # Specify the value of the `Permission-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permission-Policy
