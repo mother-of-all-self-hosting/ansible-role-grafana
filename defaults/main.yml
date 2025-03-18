@@ -102,13 +102,21 @@ grafana_smtp_user: ""
 grafana_smtp_password: ""
 grafana_smtp_from_address: ""
 
-# A list of template files on the Ansible controller server to install into the dashboards directory.
+# A list of template files on the Ansible controller server to install into the dashboard provisioning directory.
 #
 # Example:
 # grafana_provisioning_dashboard_template_files:
-#   - name: /path/to/my-dashboard.json
+#   - name: /path/to/my-dashboard-provisioning.json
 #     name: my-dashboard.json
 grafana_provisioning_dashboard_template_files: []
+
+# A list of files on the Ansible controller server to install into the dashboards directory.
+#
+# Example:
+# grafana_dashboard_files:
+#   - name: /path/to/my-dashboard.json
+#     name: my-dashboard.json
+grafana_dashboard_files: []
 
 # A list of provisioning datasources.
 # See `../templates/provisioning/datasources.yaml.j2`
