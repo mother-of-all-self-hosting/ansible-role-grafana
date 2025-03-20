@@ -110,29 +110,35 @@ grafana_provisioning_dashboard_providers:
     options:
       path: /etc/grafana/dashboards
 
-# A list of provisioning datasources.
+# A list of provisioning datasources to apply and delete.
 # See `../templates/provisioning/datasources.yaml.j2`
 grafana_provisioning_datasources: []
+grafana_provisioning_delete_datasources: []
 
-# A list of provisioning alerts.
+# A list of provisioning alerts to apply and delete.
 # See `../templates/provisioning/alerts.yaml.j2`
 grafana_provisioning_alerts: []
+grafana_provisioning_delete_alerts: []
 
-# A list of provisioning contact points.
+# A list of provisioning contact points to apply and delete.
 # See `../templates/provisioning/contact_points.yaml.j2`
 grafana_provisioning_contact_points: []
+grafana_provisioning_delete_contact_points: []
 
-# A list of provisioning notification policies.
+# A list of provisioning notification policies to apply and reset.
 # See `../templates/provisioning/notification_policies.yaml.j2`
 grafana_provisioning_notification_policies: []
+grafana_provisioning_reset_notification_policies: []
 
-# A list of provisioning mute timings.
+# A list of provisioning mute timings to apply and delete.
 # See `../templates/provisioning/mute_timings.yaml.j2`
 grafana_provisioning_mute_timings: []
+grafana_provisioning_delete_mute_timings: []
 
-# A list of provisioning notification template groups.
+# A list of provisioning notification template groups to apply and delete.
 # See `../templates/provisioning/notification_template_groups.yaml.j2`
 grafana_provisioning_notification_template_groups: []
+grafana_provisioning_delete_notification_template_groups: []
 
 # A list of provisioning plugins.
 # See `../templates/provisioning/plugins.yaml.j2`
