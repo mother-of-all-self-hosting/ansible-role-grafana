@@ -110,6 +110,10 @@ grafana_provisioning_dashboard_providers:
     options:
       path: /etc/grafana/dashboards
 
+# Configures Grafana to automatically delete previously provisioned data sources
+# when they’re removed from `grafana_provisioning_datasources`
+grafana_provisioning_prune_datasources: true
+
 # A list of provisioning datasources to apply and delete.
 # See `../templates/provisioning/datasources.yaml.j2`
 grafana_provisioning_datasources: []
