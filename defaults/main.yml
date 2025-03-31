@@ -102,7 +102,7 @@ grafana_provisioning_dashboard_template_files: []
 
 # A list of provisioning dashboard providers.
 # See `../templates/provisioning/dashboards.yaml.j2`
-grafana_provisioning_dashboard_providers:
+grafana_provisioning_dashboards_providers:
   - name: Dashboards
     folder: ''  # The folder where to place the dashboards
     type: file
@@ -111,42 +111,42 @@ grafana_provisioning_dashboard_providers:
       path: /etc/grafana/dashboards
 
 # Configures Grafana to automatically delete previously provisioned data sources
-# when they’re removed from `grafana_provisioning_datasources`
-grafana_provisioning_prune_datasources: true
+# when they’re removed from `grafana_provisioning_datasources_datasources`
+grafana_provisioning_datasources_prune: true
 
 # A list of provisioning datasources to apply and delete.
 # See `../templates/provisioning/datasources.yaml.j2`
-grafana_provisioning_datasources: []
-grafana_provisioning_delete_datasources: []
+grafana_provisioning_datasources_datasources: []
+grafana_provisioning_datasources_deleteDatasources: []  # noqa var-naming
 
 # A list of provisioning alerts to apply and delete.
 # See `../templates/provisioning/alerts.yaml.j2`
-grafana_provisioning_alerts: []
-grafana_provisioning_delete_alerts: []
+grafana_provisioning_alerts_groups: []
+grafana_provisioning_alerts_deleteRules: []  # noqa var-naming
 
 # A list of provisioning contact points to apply and delete.
 # See `../templates/provisioning/contact_points.yaml.j2`
-grafana_provisioning_contact_points: []
-grafana_provisioning_delete_contact_points: []
+grafana_provisioning_contact_points_contactPoints: []  # noqa var-naming
+grafana_provisioning_contact_points_deleteContactPoints: []  # noqa var-naming
 
 # A list of provisioning notification policies to apply and reset.
 # See `../templates/provisioning/notification_policies.yaml.j2`
-grafana_provisioning_notification_policies: []
-grafana_provisioning_reset_notification_policies: []
+grafana_provisioning_notification_policies_policies: []
+grafana_provisioning_notification_policies_resetPolicies: []  # noqa var-naming
 
 # A list of provisioning mute timings to apply and delete.
 # See `../templates/provisioning/mute_timings.yaml.j2`
-grafana_provisioning_mute_timings: []
-grafana_provisioning_delete_mute_timings: []
+grafana_provisioning_mute_timings_muteTimes: []  # noqa var-naming
+grafana_provisioning_mute_timings_deleteMuteTimes: []  # noqa var-naming
 
 # A list of provisioning notification template groups to apply and delete.
 # See `../templates/provisioning/notification_template_groups.yaml.j2`
-grafana_provisioning_notification_template_groups: []
-grafana_provisioning_delete_notification_template_groups: []
+grafana_provisioning_notification_template_groups_templates: []  # noqa var-naming
+grafana_provisioning_notification_template_groups_deleteTemplates: []  # noqa var-naming
 
 # A list of provisioning plugins.
 # See `../templates/provisioning/plugins.yaml.j2`
-grafana_provisioning_plugins: []
+grafana_provisioning_plugins_apps: []  # noqa var-naming
 
 grafana_container_image: "{{ grafana_container_image_registry_prefix }}grafana/grafana-oss:{{ grafana_version }}"
 grafana_container_image_registry_prefix: "{{ grafana_container_image_registry_prefix_upstream }}"
