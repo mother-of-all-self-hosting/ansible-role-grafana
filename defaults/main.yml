@@ -150,7 +150,8 @@ grafana_provisioning_notification_template_groups_deleteTemplates: []  # noqa va
 # See `../templates/provisioning/plugins.yaml.j2`
 grafana_provisioning_plugins_apps: []  # noqa var-naming
 
-grafana_container_image: "{{ grafana_container_image_registry_prefix }}grafana/grafana-oss:{{ grafana_version }}"
+grafana_container_image: "{{ grafana_container_image_registry_prefix }}grafana/grafana-oss:{{ grafana_container_image_tag }}"
+grafana_container_image_tag: "{{ docmost_version }}"
 grafana_container_image_registry_prefix: "{{ grafana_container_image_registry_prefix_upstream }}"
 grafana_container_image_registry_prefix_upstream: "{{ grafana_container_image_registry_prefix_upstream_default }}"
 grafana_container_image_registry_prefix_upstream_default: docker.io/
