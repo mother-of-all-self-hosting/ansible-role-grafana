@@ -14,6 +14,7 @@ grafana_enabled: true
 
 grafana_identifier: grafana
 
+# renovate: datasource=docker depName=grafana/grafana-oss versioning=semver
 grafana_version: 11.6.0-security-01
 
 grafana_uid: ''
