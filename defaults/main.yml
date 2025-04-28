@@ -30,7 +30,7 @@ grafana_path_prefix: /
 # grafana_dashboard_download_urls holds a list of URLs of dashboards to download
 grafana_dashboard_download_urls: []
 
-grafana_base_path: "{{ grafana_identifier }}"
+grafana_base_path: "/{{ grafana_identifier }}"
 grafana_config_path: "{{ grafana_base_path }}/config"
 grafana_data_path: "{{ grafana_base_path }}/data"
 
