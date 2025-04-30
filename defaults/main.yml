@@ -45,6 +45,9 @@ grafana_container_http_host_bind_port: ''
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 grafana_container_network: "{{ grafana_identifier }}"
 
+# The port number in the container
+grafana_container_http_port: 3000
+
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
 grafana_container_additional_networks: "{{ grafana_container_additional_networks_auto + grafana_container_additional_networks_custom }}"
