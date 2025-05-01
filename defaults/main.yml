@@ -61,7 +61,7 @@ grafana_container_additional_networks_custom: []
 grafana_container_labels_traefik_enabled: true
 grafana_container_labels_traefik_docker_network: "{{ grafana_container_network }}"
 grafana_container_labels_traefik_hostname: "{{ grafana_hostname }}"
-# The path prefix must either be `/` or not end with a slash (e.g. `/cinny`).
+# The path prefix must either be `/` or not end with a slash (e.g. `/grafana`).
 grafana_container_labels_traefik_path_prefix: "{{ grafana_path_prefix }}"
 grafana_container_labels_traefik_rule: "Host(`{{ grafana_container_labels_traefik_hostname }}`){% if grafana_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ grafana_container_labels_traefik_path_prefix }}`){% endif %}"
 grafana_container_labels_traefik_priority: 0
