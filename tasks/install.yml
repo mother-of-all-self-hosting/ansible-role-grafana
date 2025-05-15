@@ -96,7 +96,7 @@
     driver_options: "{{ devture_systemd_docker_base_container_networks_driver_options }}"
   when: grafana_container_network != 'host'
 
-- name: Ensure Grafana systemd service installed
+- name: Ensure Grafana systemd service is present
   ansible.builtin.template:
     src: "{{ role_path }}/templates/systemd/grafana.service.j2"
     dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ grafana_identifier }}.service"
