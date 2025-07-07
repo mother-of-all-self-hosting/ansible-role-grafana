@@ -88,7 +88,7 @@
   until: result is not failed
 
 - name: Ensure Grafana container network is created
-  community.general.docker_network:
+  community.docker.docker_network:
     enable_ipv6: "{{ devture_systemd_docker_base_ipv6_enabled }}"
     name: "{{ grafana_container_network }}"
     driver: bridge
