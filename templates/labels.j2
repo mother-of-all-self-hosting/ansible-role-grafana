@@ -14,7 +14,7 @@ traefik.docker.network={{ grafana_container_labels_traefik_docker_network }}
 {% set middlewares = [] %}
 
 {% if grafana_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ grafana_identifier }}-slashless-redirect.redirectregex.regex=({{ grafana_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ grafana_identifier }}-slashless-redirect.redirectregex.regex=^({{ grafana_container_labels_traefik_path_prefix | quote }})$
 traefik.http.middlewares.{{ grafana_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [grafana_identifier + '-slashless-redirect'] %}
 {% endif %}
