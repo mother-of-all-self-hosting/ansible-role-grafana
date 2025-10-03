@@ -219,9 +219,17 @@ grafana_smtp_from_address: ""
 #
 # Example:
 # grafana_provisioning_dashboard_template_files:
-#   - name: /path/to/my-dashboard.json
+#   - path: /path/to/my-dashboard.json.j2
 #     name: my-dashboard.json
 grafana_provisioning_dashboard_template_files: []
+
+# A list of template files on the Ansible controller server to install into the alerting directory.
+#
+# Example:
+# grafana_provisioning_alerting_template_files:
+#   - path: /path/to/my-alert.yml.j2
+#     name: my-alert.yml
+grafana_provisioning_alerting_template_files: []
 
 # A list of provisioning dashboard providers.
 # See `../templates/provisioning/dashboards.yaml.j2`
