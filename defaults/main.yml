@@ -152,6 +152,9 @@ grafana_systemd_wanted_services_list_default: []
 grafana_systemd_wanted_services_list_auto: []
 grafana_systemd_wanted_services_list_custom: []
 
+# Specify the timezone
+grafana_environment_variables_tz: UTC
+
 # grafana_dashboard_download_urls holds a list of URLs of dashboards to download
 grafana_dashboard_download_urls: []
 
