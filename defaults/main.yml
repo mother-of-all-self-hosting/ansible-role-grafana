@@ -107,7 +107,9 @@ grafana_container_labels_traefik_additional_response_headers_custom: {}
 grafana_container_labels_additional_labels: ''
 
 # A list of extra arguments to pass to the container
-grafana_container_extra_arguments: []
+grafana_container_extra_arguments: "{{ grafana_container_extra_arguments_auto + grafana_container_extra_arguments_custom }}"
+grafana_container_extra_arguments_auto: []
+grafana_container_extra_arguments_custom: []
 
 # Specify the value of the `Permission-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
