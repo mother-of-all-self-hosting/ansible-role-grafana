@@ -109,7 +109,7 @@ grafana_container_labels_additional_labels: "{{ grafana_container_labels_additio
 grafana_container_labels_additional_labels_auto: {}
 grafana_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container
+# A list of extra arguments to pass to the container (`docker create` command)
 grafana_container_extra_arguments: "{{ grafana_container_extra_arguments_auto + grafana_container_extra_arguments_custom }}"
 grafana_container_extra_arguments_auto: []
 grafana_container_extra_arguments_custom: []
