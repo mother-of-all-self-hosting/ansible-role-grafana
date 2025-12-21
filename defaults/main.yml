@@ -26,7 +26,7 @@ grafana_gid: ""
 # The hostname at which Grafana is served.
 grafana_hostname: ""
 
-# The path at which Grafana is exposed.
+# The path at which Grafana is served.
 # This value must either be `/` or not end with a slash (e.g. `/grafana`).
 grafana_path_prefix: /
 
