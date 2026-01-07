@@ -103,11 +103,11 @@ grafana_container_labels_traefik_additional_response_headers_custom: {}
 #
 # Example:
 # grafana_container_labels_additional_labels_custom: |
-#   my.label=1
-#   another.label="here"
-grafana_container_labels_additional_labels: "{{ grafana_container_labels_additional_labels_auto | combine(grafana_container_labels_additional_labels_custom) }}"
-grafana_container_labels_additional_labels_auto: {}
-grafana_container_labels_additional_labels_custom: {}
+#   - my.label=1
+#   - another.label="here"
+grafana_container_labels_additional_labels: "{{ grafana_container_labels_additional_labels_auto + grafana_container_labels_additional_labels_custom }}"
+grafana_container_labels_additional_labels_auto: []
+grafana_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
 grafana_container_extra_arguments: "{{ grafana_container_extra_arguments_auto + grafana_container_extra_arguments_custom }}"
