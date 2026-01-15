@@ -37,6 +37,9 @@ grafana_container_image_registry_prefix_upstream: "{{ grafana_container_image_re
 grafana_container_image_registry_prefix_upstream_default: docker.io/
 grafana_container_image_force_pull: "{{ grafana_container_image.endswith(':latest') }}"
 
+# The size of the container's /tmp filesystem.
+grafana_container_tmp_size: 128m
+
 # Control whether the Grafana container exposes its HTTP port (tcp/3000 in the container).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
