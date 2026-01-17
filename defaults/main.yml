@@ -37,11 +37,6 @@ grafana_container_image_registry_prefix_upstream: "{{ grafana_container_image_re
 grafana_container_image_registry_prefix_upstream_default: docker.io/
 grafana_container_image_force_pull: "{{ grafana_container_image.endswith(':latest') }}"
 
-# Control whether the Grafana container exposes its HTTP port (tcp/3000 in the container).
-#
-# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
-grafana_container_http_host_bind_port: ""
-
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 # You can specify 'host' network for container to use it.
 # In this case you will probably be interested to set GF_SERVER_HTTP_ADDR environment variable to not expose Grafana to the world.
@@ -49,6 +44,11 @@ grafana_container_http_host_bind_port: ""
 #   GF_SERVER_HTTP_ADDR=127.0.0.1
 # Setting variable to 'host' will silently ignore grafana_container_http_port and grafana_container_additional_networks variables.
 grafana_container_network: "{{ grafana_identifier }}"
+
+# Control whether the Grafana container exposes its HTTP port (tcp/3000 in the container).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
+grafana_container_http_host_bind_port: ""
 
 # The port number in the container
 grafana_container_http_port: 3000
