@@ -253,7 +253,7 @@ grafana_feature_toggles_enable: ""
 # grafana_smtp_user: "test@example.com"
 # grafana_smtp_password: "changem3"
 # grafana_smtp_from_address: "test@example.com"
-grafana_smtp_enabled: false
+grafana_mailer_smtp_enabled: false
 grafana_smtp_host: ""
 grafana_smtp_port: ""
 grafana_smtp_user: ""
