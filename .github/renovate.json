@@ -17,6 +17,7 @@
         ".github/workflows/pre-commit.yml",
         "mise.toml",
         "molecule/default/requirements.yml",
+        "molecule/features/requirements.yml",
         "molecule/requirements.txt"
       ],
       "enabled": true,
