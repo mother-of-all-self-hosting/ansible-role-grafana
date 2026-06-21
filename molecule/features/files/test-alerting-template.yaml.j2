@@ -1,0 +1,9 @@
+apiVersion: 1
+
+templates:
+  - orgId: 1
+    name: test-extra-template
+    template: |
+      {% raw %}{{ define "test-extra-template" }}
+      Extra notification template installed via alerting template file.
+      {{ end }}{% endraw %}
