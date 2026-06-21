@@ -28,11 +28,11 @@ provisioner:
   inventory:
     group_vars:
       all:
-        grafana_uid: "1000"
-        grafana_gid: "1000"
-        grafana_hostname: grafana.example.com
+        grafana_uid: 1000
+        grafana_gid: 1000
+        grafana_hostname: grafana
         grafana_container_labels_traefik_enabled: false
-        grafana_container_http_host_bind_port: "3000"
+        grafana_container_http_host_bind_port: 3000
   env:
     # This is a hack to resolve https://github.com/ansible/molecule/issues/4391
     ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles

@@ -47,14 +47,11 @@ Currently there are several testing scenarios available.
 
 ### `default`
 
-Tests a simple Grafana installation with no added bells or whistles.
+Tests a simple Grafana installation with no-added bells or whistles.
 
 ### `features`
 
-Tests an advanced Grafana installation with several optional variables configuration:
-
-- `grafana_anonymous_access`
-- `grafana_provisioning_datasources_datasources`
+Tests an advanced Grafana installation with several optional variables configured.
 
 ## Running
 
