@@ -37,9 +37,6 @@ jobs:
       - name: Install dependencies
         run: pacman -S --noconfirm --needed just mise python ansible-core
 
-      - name: Install Ansible collections
-        run: ansible-galaxy collection install -r molecule/default/requirements.yml
-
       - name: Run prek hooks
         run: |
           # The checkout action sets safe.directory using its own bundled
