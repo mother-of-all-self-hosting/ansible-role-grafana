@@ -32,7 +32,7 @@ provisioner:
         # Variables for Grafana
         grafana_uid: 1000
         grafana_gid: 1000
-        grafana_hostname: grafana
+        grafana_hostname: localhost
         grafana_container_labels_traefik_enabled: false
         grafana_container_http_host_bind_port: 3000
 
