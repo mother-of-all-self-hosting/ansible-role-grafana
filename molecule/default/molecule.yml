@@ -26,6 +26,10 @@ provisioner:
   inventory:
     group_vars:
       all:
+        # Helper variables
+        grafana_debug_service_enabled: false
+
+        # Variables for Grafana
         grafana_uid: 1000
         grafana_gid: 1000
         grafana_hostname: grafana

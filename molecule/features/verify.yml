@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
 # SPDX-FileCopyrightText: 2026 spatterlight
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
@@ -23,6 +24,12 @@
         that: grafana_service.status.ActiveState == 'active'
         fail_msg: "grafana.service not active ({{ grafana_service.status.ActiveState }})"
         success_msg: "grafana.service is active"
+
+    - name: Retrieve Grafana service log for debugging
+      when: grafana_debug_service_enabled | bool
+      ansible.builtin.command:
+        cmd: journalctl -xeu grafana.service
+      changed_when: false
 
     - name: Wait for Grafana HTTP API to respond (up to 120s)
       ansible.builtin.uri:
