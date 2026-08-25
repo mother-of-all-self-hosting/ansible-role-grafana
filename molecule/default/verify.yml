@@ -169,9 +169,9 @@
     - name: Show Grafana verification summary
       ansible.builtin.debug:
         msg:
-          - "systemd: {{ grafana_service.status.ActiveState }}"
-          - "version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
-          - "database: {{ grafana_health.json.database }}"
-          - "org: {{ grafana_org.json.name }}"
-          - "root_url: {{ grafana_settings.json.server.root_url }}"
-          - "metrics: {{ grafana_settings.json.metrics.enabled }} (endpoint {{ grafana_metrics.status }})"
+          - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
+          - "Grafana version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
+          - "Grafana database: {{ grafana_health.json.database }}"
+          - "Grafana org: {{ grafana_org.json.name }}"
+          - "Grafana root_url: {{ grafana_settings.json.server.root_url }}"
+          - "Grafana metrics: {{ grafana_settings.json.metrics.enabled }} (endpoint {{ grafana_metrics.status }})"
