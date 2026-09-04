@@ -63,7 +63,7 @@
     - name: Assert the running Grafana is the version this role installs
       ansible.builtin.assert:
         that: grafana_health.json.version.startswith(grafana_defaults.grafana_version)
-        fail_msg: "Grafana reports {{ grafana_health.json.version }}, expected {{ grafana_defaults.grafana_version }}"
+        fail_msg: "Grafana reports {{ grafana_health.json.version | default('none') }}, expected {{ grafana_defaults.grafana_version }}"
         success_msg: "Grafana reports {{ grafana_health.json.version }}"
 
     # Reports the configuration the Grafana process actually parsed. The
