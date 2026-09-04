@@ -287,19 +287,19 @@
         fail_msg: "Extra template not found: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
         success_msg: "Alerting template file is provisioned"
 
-    - name: Show Grafana features status summary
+    - name: Show the Grafana features verification summary
       ansible.builtin.debug:
         msg:
           - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
-          - "Grafana HTTP: {{ grafana_health.status }}"
           - "Grafana version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
+          - "Grafana HTTP: {{ grafana_health.status }}"
           - "Grafana database: {{ grafana_health.json.database }}"
-          - "root_url: {{ grafana_settings.json.server.root_url }}"
-          - "admin_user: {{ grafana_settings.json.security.admin_user }}"
-          - "datasources: {{ grafana_datasources.json | map(attribute='name') | list }}"
-          - "metrics HTTP: {{ grafana_metrics.status }}"
-          - "alert rules: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
-          - "contact points: {{ grafana_contact_points.json | map(attribute='name') | list }}"
-          - "mute timings: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
-          - "notification templates: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
-          - "dashboards: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"
+          - "Grafana root_url: {{ grafana_settings.json.server.root_url }}"
+          - "Grafana admin_user: {{ grafana_settings.json.security.admin_user }}"
+          - "Grafana datasources: {{ grafana_datasources.json | map(attribute='name') | list }}"
+          - "Grafana metrics HTTP: {{ grafana_metrics.status }}"
+          - "Grafana alert rules: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
+          - "Grafana contact points: {{ grafana_contact_points.json | map(attribute='name') | list }}"
+          - "Grafana mute timings: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
+          - "Grafana notification templates: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
+          - "Grafana dashboards: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"

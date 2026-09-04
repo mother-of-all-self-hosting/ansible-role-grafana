@@ -166,7 +166,7 @@
         fail_msg: "Grafana serves metrics ({{ grafana_metrics.status }}) even though they are disabled"
         success_msg: "Grafana serves no metrics while they are disabled ({{ grafana_metrics.status }})"
 
-    - name: Show Grafana verification summary
+    - name: Show the Grafana verification summary
       ansible.builtin.debug:
         msg:
           - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
