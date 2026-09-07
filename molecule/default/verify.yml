@@ -20,7 +20,7 @@
         name: grafana_defaults
 
     - name: Wait for Grafana to become active (up to 180s)
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: grafana.service
       register: grafana_service
       until: grafana_service.status.ActiveState == 'active'
@@ -30,10 +30,10 @@
     - name: Assert Grafana is active
       ansible.builtin.assert:
         that: grafana_service.status.ActiveState == 'active'
-        fail_msg: "grafana.service not active ({{ grafana_service.status.ActiveState }})"
+        fail_msg: "grafana.service is not active ({{ grafana_service.status.ActiveState }})"
         success_msg: "grafana.service is active"
 
-    - name: Retrieve Grafana service log for debugging
+    - name: Retrieve the Grafana systemd service log for debugging
       when: grafana_debug_service_enabled | bool
       ansible.builtin.command:
         cmd: journalctl -xeu grafana.service
