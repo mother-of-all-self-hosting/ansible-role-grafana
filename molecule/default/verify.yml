@@ -19,15 +19,21 @@
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: grafana_defaults
 
-    - name: Wait for Grafana to become active (up to 180s)
+    - name: Wait for the Grafana systemd service to become active (up to 180s)
       ansible.builtin.systemd_service:
         name: grafana.service
       register: grafana_service
       until: grafana_service.status.ActiveState == 'active'
       retries: 36
       delay: 5
+      # So that giving up is reported by the assertion below rather than as a
+      # wall of systemd unit properties.
+      failed_when: false
 
-    - name: Assert Grafana is active
+    # `Restart=always` in the systemd unit means that even a container which crashes
+    # and gets restarted reads as active here, so this is a precondition rather than
+    # a result.
+    - name: Assert the Grafana systemd service is active
       ansible.builtin.assert:
         that: grafana_service.status.ActiveState == 'active'
         fail_msg: "grafana.service is not active ({{ grafana_service.status.ActiveState }})"
