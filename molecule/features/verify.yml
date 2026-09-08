@@ -43,7 +43,7 @@
     - name: Retrieve the Grafana systemd service log for debugging
       when: grafana_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu grafana.service
+        cmd: journalctl --no-pager --output=cat --unit=grafana.service
       changed_when: false
 
     - name: Wait for Grafana HTTP API to respond (up to 120s)

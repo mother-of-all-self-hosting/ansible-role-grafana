@@ -42,7 +42,7 @@
     - name: Retrieve the Grafana systemd service log for debugging
       when: grafana_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu grafana.service
+        cmd: journalctl --no-pager --output=cat --unit=grafana.service
       changed_when: false
 
     # A Grafana that ignored every file this role wrote still answers here with
