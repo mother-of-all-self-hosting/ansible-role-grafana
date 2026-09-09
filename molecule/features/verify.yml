@@ -14,302 +14,302 @@
   tasks:
     - name: Verify that Grafana works
       block:
-    # The role is not included in this playbook, so its defaults are not in
-    # scope. Reading defaults/main.yml directly ties the version assertion
-    # below.
-    - name: Load the role defaults
-      ansible.builtin.include_vars:
-        file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
-        name: grafana_defaults
+        # The role is not included in this playbook, so its defaults are not in
+        # scope. Reading defaults/main.yml directly ties the version assertion
+        # below.
+        - name: Load the role defaults
+          ansible.builtin.include_vars:
+            file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
+            name: grafana_defaults
 
-    - name: Wait for the Grafana systemd service to become active (up to 180s)
-      ansible.builtin.systemd_service:
-        name: grafana.service
-      register: grafana_service
-      until: grafana_service.status.ActiveState == 'active'
-      retries: 36
-      delay: 5
-      # So that giving up is reported by the assertion below rather than as a
-      # wall of systemd unit properties.
-      failed_when: false
+        - name: Wait for the Grafana systemd service to become active (up to 180s)
+          ansible.builtin.systemd_service:
+            name: grafana.service
+          register: grafana_service
+          until: grafana_service.status.ActiveState == 'active'
+          retries: 36
+          delay: 5
+          # So that giving up is reported by the assertion below rather than as a
+          # wall of systemd unit properties.
+          failed_when: false
 
-    # `Restart=always` in the systemd unit means that even a container which crashes
-    # and gets restarted reads as active here, so this is a precondition rather than
-    # a result.
-    - name: Assert the Grafana systemd service is active
-      ansible.builtin.assert:
-        that: grafana_service.status.ActiveState == 'active'
-        fail_msg: "grafana.service is not active ({{ grafana_service.status.ActiveState }})"
-        success_msg: "grafana.service is active"
+        # `Restart=always` in the systemd unit means that even a container which crashes
+        # and gets restarted reads as active here, so this is a precondition rather than
+        # a result.
+        - name: Assert the Grafana systemd service is active
+          ansible.builtin.assert:
+            that: grafana_service.status.ActiveState == 'active'
+            fail_msg: "grafana.service is not active ({{ grafana_service.status.ActiveState }})"
+            success_msg: "grafana.service is active"
 
-    - name: Retrieve the Grafana systemd service log for debugging
-      when: grafana_debug_service_enabled | bool
-      ansible.builtin.command:
-        cmd: journalctl --no-pager --output=cat --unit=grafana.service
-      changed_when: false
+        - name: Retrieve the Grafana systemd service log for debugging
+          when: grafana_debug_service_enabled | bool
+          ansible.builtin.command:
+            cmd: journalctl --no-pager --output=cat --unit=grafana.service
+          changed_when: false
 
-    - name: Wait for Grafana HTTP API to respond (up to 120s)
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/health"
-        method: GET
-        status_code: 200
-      register: grafana_health
-      until: grafana_health.status == 200
-      retries: 24
-      delay: 5
+        - name: Wait for Grafana HTTP API to respond (up to 120s)
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/health"
+            method: GET
+            status_code: 200
+          register: grafana_health
+          until: grafana_health.status == 200
+          retries: 24
+          delay: 5
 
-    - name: Assert Grafana API reports a healthy database
-      ansible.builtin.assert:
-        that: grafana_health.json.database == 'ok'
-        fail_msg: "Grafana database health: {{ grafana_health.json.database | default('no response') }}"
-        success_msg: "Grafana database is ok"
+        - name: Assert Grafana API reports a healthy database
+          ansible.builtin.assert:
+            that: grafana_health.json.database == 'ok'
+            fail_msg: "Grafana database health: {{ grafana_health.json.database | default('no response') }}"
+            success_msg: "Grafana database is ok"
 
-    # Compared as a prefix, so that a version reported with a build suffix
-    # keeps matching. Grafana sends no version response header, so this payload
-    # is the honest surface for it.
-    - name: Assert the running Grafana is the version this role installs
-      ansible.builtin.assert:
-        that: grafana_health.json.version.startswith(grafana_defaults.grafana_version)
-        fail_msg: "Grafana reports {{ grafana_health.json.version | default('none') }}, expected {{ grafana_defaults.grafana_version }}"
-        success_msg: "Grafana reports {{ grafana_health.json.version }}"
+        # Compared as a prefix, so that a version reported with a build suffix
+        # keeps matching. Grafana sends no version response header, so this payload
+        # is the honest surface for it.
+        - name: Assert the running Grafana is the version this role installs
+          ansible.builtin.assert:
+            that: grafana_health.json.version.startswith(grafana_defaults.grafana_version)
+            fail_msg: "Grafana reports {{ grafana_health.json.version | default('none') }}, expected {{ grafana_defaults.grafana_version }}"
+            success_msg: "Grafana reports {{ grafana_health.json.version }}"
 
-    # Reports the configuration the Grafana process actually parsed. The
-    # settings asserted below are all ones this scenario overrides away from
-    # both the role defaults and the image defaults, so observing them here
-    # proves the templated grafana.ini reached the process rather than merely
-    # having been written to disk.
-    - name: Query the settings the Grafana process is running with
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/admin/settings"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        follow_redirects: none
-        status_code: 200
-      register: grafana_settings
+        # Reports the configuration the Grafana process actually parsed. The
+        # settings asserted below are all ones this scenario overrides away from
+        # both the role defaults and the image defaults, so observing them here
+        # proves the templated grafana.ini reached the process rather than merely
+        # having been written to disk.
+        - name: Query the settings the Grafana process is running with
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/admin/settings"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            follow_redirects: none
+            status_code: 200
+          register: grafana_settings
 
-    - name: Assert Grafana runs with the configuration this scenario generated
-      ansible.builtin.assert:
-        that:
-          - grafana_settings.json.security.admin_user == grafana_default_admin_user
-          - grafana_settings.json.server.root_url == 'https://' ~ grafana_hostname ~ grafana_defaults.grafana_path_prefix
-          - grafana_settings.json.security.allow_embedding | bool
-          - grafana_settings.json.metrics.enabled | bool
-        fail_msg: >-
-          Grafana is not running with the configuration this scenario generated:
-          admin_user={{ grafana_settings.json.security.admin_user }},
-          root_url={{ grafana_settings.json.server.root_url }},
-          allow_embedding={{ grafana_settings.json.security.allow_embedding }},
-          metrics.enabled={{ grafana_settings.json.metrics.enabled }}
-        success_msg: "Grafana runs with the configuration this scenario generated"
+        - name: Assert Grafana runs with the configuration this scenario generated
+          ansible.builtin.assert:
+            that:
+              - grafana_settings.json.security.admin_user == grafana_default_admin_user
+              - grafana_settings.json.server.root_url == 'https://' ~ grafana_hostname ~ grafana_defaults.grafana_path_prefix
+              - grafana_settings.json.security.allow_embedding | bool
+              - grafana_settings.json.metrics.enabled | bool
+            fail_msg: >-
+              Grafana is not running with the configuration this scenario generated:
+              admin_user={{ grafana_settings.json.security.admin_user }},
+              root_url={{ grafana_settings.json.server.root_url }},
+              allow_embedding={{ grafana_settings.json.security.allow_embedding }},
+              metrics.enabled={{ grafana_settings.json.metrics.enabled }}
+            success_msg: "Grafana runs with the configuration this scenario generated"
 
-    - name: Query provisioned datasources via the Grafana API
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/datasources"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_datasources
+        - name: Query provisioned datasources via the Grafana API
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/datasources"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_datasources
 
-    - name: Assert the TestData datasource is provisioned
-      ansible.builtin.assert:
-        that: "'TestData' in (grafana_datasources.json | map(attribute='name') | list)"
-        fail_msg: "TestData datasource not found ({{ grafana_datasources.json | map(attribute='name') | list }})"
-        success_msg: "TestData datasource is provisioned"
+        - name: Assert the TestData datasource is provisioned
+          ansible.builtin.assert:
+            that: "'TestData' in (grafana_datasources.json | map(attribute='name') | list)"
+            fail_msg: "TestData datasource not found ({{ grafana_datasources.json | map(attribute='name') | list }})"
+            success_msg: "TestData datasource is provisioned"
 
-    - name: Fetch the /metrics endpoint
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/metrics"
-        method: GET
-        return_content: true
-        status_code: 200
-      register: grafana_metrics
+        - name: Fetch the /metrics endpoint
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/metrics"
+            method: GET
+            return_content: true
+            status_code: 200
+          register: grafana_metrics
 
-    - name: Assert /metrics returns Prometheus content
-      ansible.builtin.assert:
-        that:
-          - grafana_metrics.status == 200
-          - "'grafana_build_info' in grafana_metrics.content"
-        fail_msg: "/metrics did not return expected Prometheus content"
-        success_msg: "Metrics endpoint is enabled"
+        - name: Assert /metrics returns Prometheus content
+          ansible.builtin.assert:
+            that:
+              - grafana_metrics.status == 200
+              - "'grafana_build_info' in grafana_metrics.content"
+            fail_msg: "/metrics did not return expected Prometheus content"
+            success_msg: "Metrics endpoint is enabled"
 
-    - name: Assert wrong password is rejected with 401
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/org"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: wrongpassword
-        force_basic_auth: true
-        status_code: 401
-      register: grafana_bad_auth
+        - name: Assert wrong password is rejected with 401
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/org"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: wrongpassword
+            force_basic_auth: true
+            status_code: 401
+          register: grafana_bad_auth
 
-    - name: Assert wrong password returns 401
-      ansible.builtin.assert:
-        that: grafana_bad_auth.status == 401
-        fail_msg: "Wrong password should return 401, got {{ grafana_bad_auth.status }}"
-        success_msg: "Custom admin credentials are enforced"
+        - name: Assert wrong password returns 401
+          ansible.builtin.assert:
+            that: grafana_bad_auth.status == 401
+            fail_msg: "Wrong password should return 401, got {{ grafana_bad_auth.status }}"
+            success_msg: "Custom admin credentials are enforced"
 
-    - name: Assert Content-Security-Policy header is present
-      ansible.builtin.assert:
-        that: "'content_security_policy' in grafana_bad_auth"
-        fail_msg: "Content-Security-Policy header not found"
-        success_msg: "Content-Security-Policy header is present"
+        - name: Assert Content-Security-Policy header is present
+          ansible.builtin.assert:
+            that: "'content_security_policy' in grafana_bad_auth"
+            fail_msg: "Content-Security-Policy header not found"
+            success_msg: "Content-Security-Policy header is present"
 
-    - name: Assert X-Frame-Options is absent (allow_embedding is enabled)
-      ansible.builtin.assert:
-        that: "'x_frame_options' not in grafana_bad_auth"
-        fail_msg: "X-Frame-Options is present — embedding appears blocked"
-        success_msg: "X-Frame-Options is absent (embedding allowed)"
+        - name: Assert X-Frame-Options is absent (allow_embedding is enabled)
+          ansible.builtin.assert:
+            that: "'x_frame_options' not in grafana_bad_auth"
+            fail_msg: "X-Frame-Options is present — embedding appears blocked"
+            success_msg: "X-Frame-Options is absent (embedding allowed)"
 
-    - name: Assert custom admin credentials authenticate
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/org"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_good_auth
+        - name: Assert custom admin credentials authenticate
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/org"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_good_auth
 
-    - name: Assert correct credentials return 200
-      ansible.builtin.assert:
-        that: grafana_good_auth.status == 200
-        fail_msg: "Custom admin credentials failed ({{ grafana_good_auth.status }})"
-        success_msg: "Custom admin credentials work correctly"
+        - name: Assert correct credentials return 200
+          ansible.builtin.assert:
+            that: grafana_good_auth.status == 200
+            fail_msg: "Custom admin credentials failed ({{ grafana_good_auth.status }})"
+            success_msg: "Custom admin credentials work correctly"
 
-    - name: Search for provisioned dashboard template file
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/search?query=Molecule+Test+Dashboard&type=dash-db"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_dashboard_search
+        - name: Search for provisioned dashboard template file
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/search?query=Molecule+Test+Dashboard&type=dash-db"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_dashboard_search
 
-    - name: Assert Molecule Test Dashboard is provisioned
-      ansible.builtin.assert:
-        that: >-
-          'Molecule Test Dashboard' in
-          (grafana_dashboard_search.json | map(attribute='title') | list)
-        fail_msg: "Molecule Test Dashboard not found: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"
-        success_msg: "Molecule Test Dashboard is provisioned"
+        - name: Assert Molecule Test Dashboard is provisioned
+          ansible.builtin.assert:
+            that: >-
+              'Molecule Test Dashboard' in
+              (grafana_dashboard_search.json | map(attribute='title') | list)
+            fail_msg: "Molecule Test Dashboard not found: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"
+            success_msg: "Molecule Test Dashboard is provisioned"
 
-    - name: Query provisioned alert rules
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/v1/provisioning/alert-rules"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_alert_rules
+        - name: Query provisioned alert rules
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/v1/provisioning/alert-rules"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_alert_rules
 
-    - name: Assert test alert rule is provisioned
-      ansible.builtin.assert:
-        that: >-
-          'TestData Always-Normal Rule' in
-          (grafana_alert_rules.json | map(attribute='title') | list)
-        fail_msg: "Alert rule not found: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
-        success_msg: "Alert rule is provisioned"
+        - name: Assert test alert rule is provisioned
+          ansible.builtin.assert:
+            that: >-
+              'TestData Always-Normal Rule' in
+              (grafana_alert_rules.json | map(attribute='title') | list)
+            fail_msg: "Alert rule not found: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
+            success_msg: "Alert rule is provisioned"
 
-    - name: Query provisioned contact points
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/v1/provisioning/contact-points"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_contact_points
+        - name: Query provisioned contact points
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/v1/provisioning/contact-points"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_contact_points
 
-    - name: Assert test-contact-point is provisioned
-      ansible.builtin.assert:
-        that: >-
-          'test-contact-point' in
-          (grafana_contact_points.json | map(attribute='name') | list)
-        fail_msg: "Contact point not found: {{ grafana_contact_points.json | map(attribute='name') | list }}"
-        success_msg: "Contact point is provisioned"
+        - name: Assert test-contact-point is provisioned
+          ansible.builtin.assert:
+            that: >-
+              'test-contact-point' in
+              (grafana_contact_points.json | map(attribute='name') | list)
+            fail_msg: "Contact point not found: {{ grafana_contact_points.json | map(attribute='name') | list }}"
+            success_msg: "Contact point is provisioned"
 
-    - name: Query provisioned notification policies
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/v1/provisioning/policies"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_policies
+        - name: Query provisioned notification policies
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/v1/provisioning/policies"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_policies
 
-    - name: Assert root policy receiver is test-contact-point
-      ansible.builtin.assert:
-        that: grafana_policies.json.receiver == 'test-contact-point'
-        fail_msg: "Root policy receiver: {{ grafana_policies.json.receiver | default('') }}"
-        success_msg: "Notification policy is provisioned"
+        - name: Assert root policy receiver is test-contact-point
+          ansible.builtin.assert:
+            that: grafana_policies.json.receiver == 'test-contact-point'
+            fail_msg: "Root policy receiver: {{ grafana_policies.json.receiver | default('') }}"
+            success_msg: "Notification policy is provisioned"
 
-    - name: Query provisioned mute timings
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/v1/provisioning/mute-timings"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_mute_timings
+        - name: Query provisioned mute timings
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/v1/provisioning/mute-timings"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_mute_timings
 
-    - name: Assert test-mute-timing is provisioned
-      ansible.builtin.assert:
-        that: >-
-          'test-mute-timing' in
-          (grafana_mute_timings.json | map(attribute='name') | list)
-        fail_msg: "Mute timing not found: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
-        success_msg: "Mute timing is provisioned"
+        - name: Assert test-mute-timing is provisioned
+          ansible.builtin.assert:
+            that: >-
+              'test-mute-timing' in
+              (grafana_mute_timings.json | map(attribute='name') | list)
+            fail_msg: "Mute timing not found: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
+            success_msg: "Mute timing is provisioned"
 
-    - name: Query provisioned notification templates
-      ansible.builtin.uri:
-        url: "{{ grafana_url }}/api/v1/provisioning/templates"
-        method: GET
-        url_username: "{{ grafana_default_admin_user }}"
-        url_password: "{{ grafana_default_admin_password }}"
-        force_basic_auth: true
-        status_code: 200
-      register: grafana_notif_templates
+        - name: Query provisioned notification templates
+          ansible.builtin.uri:
+            url: "{{ grafana_url }}/api/v1/provisioning/templates"
+            method: GET
+            url_username: "{{ grafana_default_admin_user }}"
+            url_password: "{{ grafana_default_admin_password }}"
+            force_basic_auth: true
+            status_code: 200
+          register: grafana_notif_templates
 
-    - name: Assert test-notification-template is provisioned
-      ansible.builtin.assert:
-        that: >-
-          'test-notification-template' in
-          (grafana_notif_templates.json | map(attribute='name') | list)
-        fail_msg: "Notification template not found: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
-        success_msg: "Notification template is provisioned"
+        - name: Assert test-notification-template is provisioned
+          ansible.builtin.assert:
+            that: >-
+              'test-notification-template' in
+              (grafana_notif_templates.json | map(attribute='name') | list)
+            fail_msg: "Notification template not found: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
+            success_msg: "Notification template is provisioned"
 
-    - name: Assert test-extra-template is provisioned via alerting template file
-      ansible.builtin.assert:
-        that: >-
-          'test-extra-template' in
-          (grafana_notif_templates.json | map(attribute='name') | list)
-        fail_msg: "Extra template not found: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
-        success_msg: "Alerting template file is provisioned"
+        - name: Assert test-extra-template is provisioned via alerting template file
+          ansible.builtin.assert:
+            that: >-
+              'test-extra-template' in
+              (grafana_notif_templates.json | map(attribute='name') | list)
+            fail_msg: "Extra template not found: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
+            success_msg: "Alerting template file is provisioned"
 
-    - name: Show the Grafana features verification summary
-      ansible.builtin.debug:
-        msg:
-          - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
-          - "Grafana version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
-          - "Grafana HTTP: {{ grafana_health.status }}"
-          - "Grafana database: {{ grafana_health.json.database }}"
-          - "Grafana root_url: {{ grafana_settings.json.server.root_url }}"
-          - "Grafana admin_user: {{ grafana_settings.json.security.admin_user }}"
-          - "Grafana datasources: {{ grafana_datasources.json | map(attribute='name') | list }}"
-          - "Grafana metrics HTTP: {{ grafana_metrics.status }}"
-          - "Grafana alert rules: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
-          - "Grafana contact points: {{ grafana_contact_points.json | map(attribute='name') | list }}"
-          - "Grafana mute timings: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
-          - "Grafana notification templates: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
-          - "Grafana dashboards: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"
+        - name: Show the Grafana features verification summary
+          ansible.builtin.debug:
+            msg:
+              - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
+              - "Grafana version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
+              - "Grafana HTTP: {{ grafana_health.status }}"
+              - "Grafana database: {{ grafana_health.json.database }}"
+              - "Grafana root_url: {{ grafana_settings.json.server.root_url }}"
+              - "Grafana admin_user: {{ grafana_settings.json.security.admin_user }}"
+              - "Grafana datasources: {{ grafana_datasources.json | map(attribute='name') | list }}"
+              - "Grafana metrics HTTP: {{ grafana_metrics.status }}"
+              - "Grafana alert rules: {{ grafana_alert_rules.json | map(attribute='title') | list }}"
+              - "Grafana contact points: {{ grafana_contact_points.json | map(attribute='name') | list }}"
+              - "Grafana mute timings: {{ grafana_mute_timings.json | map(attribute='name') | list }}"
+              - "Grafana notification templates: {{ grafana_notif_templates.json | map(attribute='name') | list }}"
+              - "Grafana dashboards: {{ grafana_dashboard_search.json | map(attribute='title') | list }}"
 
       rescue:
         # Whatever went wrong, the reason is almost always in the systemd service log.
