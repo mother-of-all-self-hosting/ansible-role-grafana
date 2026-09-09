@@ -11,6 +11,8 @@
   vars:
     grafana_verify_base_url: "http://127.0.0.1:{{ grafana_container_http_host_bind_port }}"
   tasks:
+    - name: Verify that Grafana works
+      block:
     # The role is not included in this playbook, so its defaults are not in
     # scope. Reading defaults/main.yml directly ties the version assertion
     # below.
@@ -179,3 +181,19 @@
           - "Grafana org: {{ grafana_org.json.name }}"
           - "Grafana root_url: {{ grafana_settings.json.server.root_url }}"
           - "Grafana metrics: {{ grafana_settings.json.metrics.enabled }} (endpoint {{ grafana_metrics.status }})"
+
+      rescue:
+        # Whatever went wrong, the reason is almost always in the systemd service log.
+        - name: Retrieve the Grafana systemd service log
+          ansible.builtin.command:
+            cmd: journalctl --no-pager --output=cat --unit=grafana.service
+          register: grafana_service_log
+          changed_when: false
+
+        - name: Show the Grafana systemd service log
+          ansible.builtin.debug:
+            var: grafana_service_log.stdout_lines
+
+        - name: Fail because verification did not pass
+          ansible.builtin.fail:
+            msg: "Grafana verification failed. The systemd service log is printed above."
