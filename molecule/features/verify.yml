@@ -9,8 +9,13 @@
   hosts: all
   become: true
   gather_facts: false
+
   vars:
     grafana_url: "http://localhost:3000"
+
+    grafana_verify_units:
+      - grafana.service
+
   tasks:
     - name: Verify that Grafana works
       block:
@@ -22,13 +27,14 @@
             file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
             name: grafana_defaults
 
-        - name: Wait for the Grafana systemd service to become active (up to 180s)
+        - name: Wait for the Grafana systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: grafana.service
-          register: grafana_service
-          until: grafana_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: grafana_services
+          until: grafana_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ grafana_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -36,17 +42,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the Grafana systemd service is active
+        - name: Assert the Grafana systemd services are active
           ansible.builtin.assert:
-            that: grafana_service.status.ActiveState == 'active'
-            fail_msg: "grafana.service is not active ({{ grafana_service.status.ActiveState }})"
-            success_msg: "grafana.service is active"
+            that: grafana_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(grafana_verify_units | zip(grafana_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the Grafana systemd service log for debugging
+        - name: Retrieve the Grafana systemd services log for debugging
           when: grafana_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: journalctl --no-pager --output=cat --unit=grafana.service
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ grafana_verify_units }}"
 
         - name: Wait for Grafana HTTP API to respond (up to 120s)
           ansible.builtin.uri:
@@ -297,7 +306,7 @@
         - name: Show the Grafana features verification summary
           ansible.builtin.debug:
             msg:
-              - "Grafana systemd: {{ grafana_service.status.ActiveState }}"
+              - "Grafana systemd: {% for unit, state in grafana_verify_units | zip(grafana_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "Grafana version: {{ grafana_health.json.version }} (role installs {{ grafana_defaults.grafana_version }})"
               - "Grafana HTTP: {{ grafana_health.status }}"
               - "Grafana database: {{ grafana_health.json.database }}"
