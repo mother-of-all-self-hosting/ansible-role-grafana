@@ -57,21 +57,30 @@
           changed_when: false
           loop: "{{ grafana_verify_units }}"
 
-        - name: Wait for Grafana HTTP API to respond (up to 120s)
+        - name: Wait for Grafana to report itself healthy (up to 180s)
           ansible.builtin.uri:
             url: "{{ grafana_url }}/api/health"
             method: GET
             status_code: 200
           register: grafana_health
           until: grafana_health.status == 200
-          retries: 24
+          retries: 36
           delay: 5
+          # So that giving up is reported by the assertion below rather than as a
+          # wall of systemd unit properties.
+          failed_when: false
+
+        - name: Assert Grafana reports itself healthy
+          ansible.builtin.assert:
+            that: grafana_health.status == 200
+            fail_msg: "Grafana did not report itself healthy: {{ grafana_health.status | default('no response') }}"
+            success_msg: "Grafana reports itself healthy"
 
         - name: Assert Grafana API reports a healthy database
           ansible.builtin.assert:
             that: grafana_health.json.database == 'ok'
-            fail_msg: "Grafana database health: {{ grafana_health.json.database | default('no response') }}"
-            success_msg: "Grafana database is ok"
+            fail_msg: "Grafana did not report its database to be healthy: {{ grafana_health.json.database | default('no response') }}"
+            success_msg: "Grafana reports its database to be healthy"
 
         # Compared as a prefix, so that a version reported with a build suffix
         # keeps matching. Grafana sends no version response header, so this payload
