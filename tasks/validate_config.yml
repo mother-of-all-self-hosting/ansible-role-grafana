@@ -15,7 +15,8 @@
   with_items:
     - { "old": "grafana_container_tmp_size", "new": "grafana_container_tmpfs_tmp_size" }
     - { "old": "grafana_container_additional_networks_additional", "new": "grafana_container_additional_networks_custom" }
-    - { "old": "grafana_smtp_enabled", "new": "grafana_mailer_smtp_enabled" }
+    - { "old": "grafana_smtp_enabled", "new": "grafana_mailer_enabled" }
+    - { "old": "grafana_mailer_smtp_enabled", "new": "grafana_mailer_enabled" }
     - { "old": "grafana_smtp_host", "new": "grafana_config_smtp_host" }
     - { "old": "grafana_smtp_port", "new": "grafana_config_smtp_port" }
     - { "old": "grafana_smtp_user", "new": "grafana_config_smtp_user" }
