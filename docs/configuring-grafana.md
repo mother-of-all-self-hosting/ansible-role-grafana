@@ -68,19 +68,19 @@ grafana_hostname: "example.com"
 
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
-### Setting username and password for the admin user (optional)
+### Setting administrator's account details (optional)
 
 By default Grafana creates a user with `admin` as the username and password. You are asked to change the credentials on first login. If this is insecure for you, you can change them beforehand by adding the following configuration to your `vars.yml` file:
 
 ```yaml
-grafana_default_admin_user: YOUR_ADMIN_USER_USERNAME_HERE
-
-# The value can be generated with `pwgen -s 64 1` or in another way.
-grafana_default_admin_password: YOUR_ADMIN_USER_PASSWORD_HERE
+grafana_default_admin_user: ADMIN_USERNAME_HERE
+grafana_default_admin_password: ADMIN_PASSWORD_HERE
 ```
 
+Generating a strong password (e.g. `pwgen -s 64 1`) is recommended for `grafana_default_admin_password`.
+
 >[!NOTE]
-> Changing those username/password subsequently won't update them.
+> Subsequent changes to them will not affect the existing user.
 
 ### Allowing anonymous access (optional)
 
