@@ -44,7 +44,7 @@
   ansible.builtin.fail:
     msg: >-
       You need to define a required configuration setting (`{{ item }}`) to correctly set up email via SMTP.
-  when: "grafana_mailer_smtp_enabled | bool and lookup('vars', item, default='') | string | length == 0"
+  when: "grafana_mailer_enabled | bool and lookup('vars', item, default='') | string | length == 0"
   with_items:
     - grafana_config_smtp_host
     - grafana_config_smtp_port
