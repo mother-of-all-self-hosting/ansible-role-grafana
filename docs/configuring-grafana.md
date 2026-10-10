@@ -90,6 +90,36 @@ By default viewing graphs requires you to log in to the instance. If you want to
 grafana_anonymous_access: true
 ```
 
+### Configuring a SMTP mailer (optional)
+
+You can configure a SMTP mailer to enable email functions such as password recovery.
+
+To configure it, add the following configuration to your `vars.yml` file as below (adapt to your needs):
+
+```yaml
+grafana_mailer_enabled: true
+
+# Specify SMTP server hostname
+grafana_config_smtp_host: ""
+
+# Specify SMTP server port number
+grafana_config_smtp_port: 587
+
+# Specify SMTP server username
+grafana_config_smtp_user: ""
+
+# Specify SMTP server password
+grafana_config_smtp_password: ""
+
+# Specify the email address that emails will be sent from
+grafana_config_smtp_from_address: ""
+```
+
+Refer to [this page](https://grafana.com/docs/grafana/latest/alerting/configure-notifications/manage-contact-points/integrations/configure-email/) on the official documentation for details.
+
+>[!WARNING]
+> Without setting an authentication method such as DKIM, SPF, and DMARC for your hostname, emails are most likely to be quarantined as spam at recipient's mail servers. The worst scenario is that your server's IP address or hostname will be included in the spam list such as the one managed by [Spamhaus](https://www.spamhaus.org/). If you have set up a mail server with the [MASH project's exim-relay Ansible role](https://github.com/mother-of-all-self-hosting/ansible-role-exim-relay), you can enable DKIM signing with it. Refer [its documentation](https://github.com/mother-of-all-self-hosting/ansible-role-exim-relay/blob/main/docs/configuring-exim-relay.md#enable-dkim-support-optional) for details.
+
 ### File provisioning
 
 The fully configured Grafana instance is a system of multiple components, such as dashboards, data sources, notification points, other resources, and so on. All of these things can be configured via the UI, but many of them can also be configured directly via "File provisioning".
