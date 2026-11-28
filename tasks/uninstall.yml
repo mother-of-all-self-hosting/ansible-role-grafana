@@ -25,7 +25,7 @@
         state: absent
 
     - name: Ensure Grafana container network does not exist
-      when: grafana_container_network_deletion_enabled
+      when: grafana_container_network_deletion_enabled and grafana_container_network != 'host'
       block:
         - name: Ensure Grafana container network does not exist via community.docker.docker_network
           when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
